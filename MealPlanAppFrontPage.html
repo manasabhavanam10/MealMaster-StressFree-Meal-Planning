@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meal Master</h1>
+        <form id="inputForm">
+            <label for="diet">Meal Type:</label>
+            <input type="text" id="diet" name="diet" placeholder="Enter diet type" required />
+
+            <label for="calories">Intended calories intake:</label>
+            <input type="text" id="calories" name="calories" placeholder="Enter calories" required />
+			
+			   <label for="Allergies">Allergies</label>
+            <input type="text" id="Allergies" name="Allergies" placeholder="Enter Allergies if any"  />
+
+
+			   <label for="ingredients">Ingredients</label>
+            <input type="text" id="ingredients" name="ingredients" placeholder="Specify ingredients if necessary"  />
+			
+            <button type="submit">Submit</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('inputForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); 
+            const diet = document.getElementById('diet').value;
+            const calories = document.getElementById('calories').value;
+			const Allergies = document.getElementById('Allergies').value;
+			const ingredients = document.getElementById('ingredients').value;
+			
+            try {
+                const response = await fetch('http://localhost:3000/generate-meal-plan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ diet, calories, Allergies, ingredients }),
+                });
+				
+            const data = await response.json()
+			console.log(data)
+            
+                resultDiv.textContent = `${data}`;
+            } catch (error) {
+                resultDiv.textContent = 'Error sending request.';
+            }
+        });
+		
+    </script>
+</body>
+</html>
